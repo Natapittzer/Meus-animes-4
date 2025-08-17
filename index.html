@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Catálogo de Animes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button class="help-btn" id="helpBtn" title="Como usar o sistema">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                    <span class="welcome-text">Bem-vindo!</span>
+                    <i class="fas fa-moon moon-icon"></i>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="addAnimeBtn">
+                        <i class="fas fa-plus"></i> Adicionar Anime
+                    </button>
+                    <div class="profile-section">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <img id="avatarImage" src="" alt="Avatar" style="display: none;">
+                            <i class="fas fa-user" id="defaultAvatar"></i>
+                        </div>
+                        <button class="btn btn-profile" id="profileBtn">
+                            <i class="fa fa-cog"></i> Config
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Botões de Exportar/Importar -->
+        <section class="export-import-section">
+            <div class="export-import-buttons">
+                <button class="btn btn-success" id="exportBtn">
+                    <i class="fas fa-download"></i> Exportar JSON
+                </button>
+                <button class="btn btn-info" id="importBtn">
+                    <i class="fas fa-upload"></i> Importar JSON
+                </button>
+                <button class="btn btn-warning" id="cloudBackupBtn">
+                    <i class="fas fa-cloud-upload-alt"></i> Backup na Nuvem
+                </button>
+                <button class="btn btn-primary" id="cloudRestoreBtn">
+                    <i class="fas fa-cloud-download-alt"></i> Restaurar da Nuvem
+                </button>
+            </div>
+        </section>
+
+        <!-- Estatísticas -->
+        <section class="stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-play-circle"></i>
+                    <div class="stat-info">
+                        <h3 id="totalAnimes">0</h3>
+                        <p>Total de Animes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-eye"></i>
+                    <div class="stat-info">
+                        <h3 id="totalEpisodios">0</h3>
+                        <p>Episódios Assistidos</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <div class="stat-info">
+                        <h3 id="tempoTotal">0h</h3>
+                        <p>Tempo Total</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-heart"></i>
+                    <div class="stat-info">
+                        <h3 id="totalFavoritos">0</h3>
+                        <p>Favoritos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros e Pesquisa -->
+        <section class="filters">
+            <div class="filters-row">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Pesquisar anime...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="watching">Assistindo <span class="filter-count" id="watchingCount">0</span></button>
+                    <button class="filter-btn" data-filter="completed">Terminado <span class="filter-count" id="completedCount">0</span></button>
+                    <button class="filter-btn" data-filter="plan">Quero Assistir <span class="filter-count" id="planCount">0</span></button>
+                    <button class="filter-btn" data-filter="favorites">Favoritos</button>
+                    <button class="filter-btn" data-filter="hidden">Ocultos <span class="filter-count" id="hiddenCount">0</span></button>
+                </div>
+            </div>
+            <div class="filters-row">
+                <div class="genre-filter">
+                    <select id="genreFilter">
+                        <option value="">Todos os gêneros</option>
+                    </select>
+                </div>
+                <div class="sort-filter">
+                    <select id="sortFilter">
+                        <option value="name">Ordenar por Nome</option>
+                        <option value="status">Ordenar por Status</option>
+                        <option value="episodes">Ordenar por Episódios</option>
+                        <option value="date">Ordenar por Data</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista de Animes -->
+        <section class="anime-list" id="animeList">
+            <!-- Animes serão inseridos aqui dinamicamente -->
+        </section>
+
+        <!-- Modal de Perfil -->
+        <div class="modal" id="profileModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Meu Perfil</h2>
+                    <button class="close-btn" id="closeProfileModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="profile-form">
+                        <div class="avatar-upload-section">
+                            <div class="current-avatar">
+                                <div class="profile-avatar-large" id="profileAvatarLarge">
+                                    <img id="avatarImageLarge" src="" alt="Avatar" style="display: none;">
+                                    <i class="fas fa-user" id="defaultAvatarLarge"></i>
+                                </div>
+                            </div>
+                            <div class="avatar-upload-controls">
+                                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                                <button class="btn btn-primary" id="uploadAvatarBtn">
+                                    <i class="fas fa-upload"></i> Escolher Foto
+                                </button>
+                                <button class="btn btn-secondary" id="removeAvatarBtn" style="display: none;">
+                                    <i class="fas fa-trash"></i> Remover Foto
+                                </button>
+                            </div>
+                        </div>
+                        <div class="profile-info">
+                            <div class="form-group">
+                                <label for="profileName">Nome</label>
+                                <input type="text" id="profileName" placeholder="Seu nome">
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail">Email</label>
+                                <input type="email" id="profileEmail" placeholder="seu@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="profileBio">Biografia</label>
+                                <textarea id="profileBio" placeholder="Conte um pouco sobre você..." rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelProfileBtn">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveProfileBtn">Salvar Perfil</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Adicionar/Editar Anime -->
+        <div class="modal" id="animeModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Adicionar Novo Anime</h2>
+                    <button class="close-btn" id="closeModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="animeForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="animeName">Nome do Anime *</label>
+                            <input type="text" id="animeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="animeImage">URL da Imagem</label>
+                            <input type="url" id="animeImage" placeholder="https://exemplo.com/imagem.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUpload">Ou Upload de Imagem</label>
+                            <input type="file" id="imageUpload" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label for="animeGenres">Gêneros</label>
+                            <input type="text" id="animeGenres" placeholder="Ação, Comédia, Drama">
+                        </div>
+                        <div class="form-group">
+                            <label for="animeStatus">Status *</label>
+                            <select id="animeStatus" required>
+                                <option value="watching">Assistindo</option>
+                                <option value="completed">Terminado</option>
+                                <option value="plan">Quero Assistir</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalSeasons">Número de Temporadas</label>
+                            <input type="number" id="totalSeasons" min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="totalEpisodes">Total de Episódios *</label>
+                            <input type="number" id="totalEpisodes" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="watchedEpisodes">Episódios Assistidos</label>
+                            <input type="number" id="watchedEpisodes" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Data de Início</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">Data de Término</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="externalLink1">Crunchyroll</label>
+                            <input type="url" id="externalLink1" placeholder="MyAnimeList, Crunchyroll, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="externalLink2">Link Externo 2</label>
+                            <input type="url" id="externalLink2" placeholder="Crunchyroll, Netflix, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="externalLink3">Link Externo 3</label>
+                            <input type="url" id="externalLink3" placeholder="Funimation, Amazon Prime, etc.">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="isFavorite">
+                                <span class="checkmark"></span>
+                                Marcar como Favorito
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="isHidden">
+                                <span class="checkmark"></span>
+                                Ocultar anime
+                            </label>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="animeComments">Comentários e Impressões</label>
+                            <textarea id="animeComments" placeholder="Anote suas impressões, opiniões, momentos favoritos, etc..." rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Confirmação -->
+        <div class="modal" id="confirmModal">
+            <div class="modal-content confirm-modal">
+                <div class="modal-header">
+                    <h2>Confirmar Exclusão</h2>
+                    <button class="close-btn" id="closeConfirmModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este anime?</p>
+                    <p class="anime-name" id="confirmAnimeName"></p>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelDelete">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Importação -->
+        <div class="modal" id="importModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Importar Catálogo de Animes</h2>
+                    <button class="close-btn" id="closeImportModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="import-options">
+                        <div class="import-option">
+                            <h3>Opção 1: Substituir Todos os Dados</h3>
+                            <p>Esta opção irá substituir completamente o catálogo atual pelos dados importados.</p>
+                            <button class="btn btn-danger" id="replaceAllBtn">
+                                <i class="fas fa-exclamation-triangle"></i> Substituir Todos
+                            </button>
+                        </div>
+                        <div class="import-option">
+                            <h3>Opção 2: Mesclar Dados</h3>
+                            <p>Esta opção irá adicionar os novos animes sem remover os existentes.</p>
+                            <button class="btn btn-warning" id="mergeDataBtn">
+                                <i class="fas fa-plus"></i> Mesclar Dados
+                            </button>
+                        </div>
+                    </div>
+                    <div class="import-preview" id="importPreview" style="display: none;">
+                        <h3>Prévia dos Dados:</h3>
+                        <div id="previewContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input file oculto para importação -->
+        <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+
+        <!-- Modal de Backup na Nuvem -->
+        <div class="modal" id="cloudBackupModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Backup na Nuvem</h2>
+                    <button class="close-btn" id="closeCloudBackupModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="cloud-backup-section">
+                        <h3>Configuração do Servidor</h3>
+                        <div class="form-group">
+                            <label for="serverUrl">URL do Servidor</label>
+                            <input type="url" id="serverUrl" placeholder="https://seu-servidor.com/api" value="https://api.jsonbin.io/v3">
+                        </div>
+                        <div class="form-group">
+                            <label for="apiKey">Chave da API</label>
+                            <input type="text" id="apiKey" placeholder="Sua chave da API">
+                        </div>
+                        <div class="form-group">
+                            <label for="binId">ID do Bin (opcional)</label>
+                            <input type="text" id="binId" placeholder="Deixe vazio para criar novo">
+                        </div>
+                    </div>
+                    
+                    <div class="cloud-backup-actions">
+                        <button class="btn btn-warning" id="testConnectionBtn">
+                            <i class="fas fa-plug"></i> Testar Conexão
+                        </button>
+                        <button class="btn btn-success" id="uploadBackupBtn">
+                            <i class="fas fa-cloud-upload-alt"></i> Fazer Backup
+                        </button>
+                        <button class="btn btn-info" id="downloadBackupBtn">
+                            <i class="fas fa-cloud-download-alt"></i> Baixar Backup
+                        </button>
+                    </div>
+
+                    <div class="cloud-status" id="cloudStatus" style="display: none;">
+                        <h4>Status da Conexão:</h4>
+                        <div id="connectionStatus"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
